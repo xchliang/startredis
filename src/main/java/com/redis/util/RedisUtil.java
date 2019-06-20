@@ -239,7 +239,7 @@ public class RedisUtil {
             Map<String, String> map = jedis.hgetAll(key);
             return map;
         } catch (Exception e) {
-            logger.error("hmset error : ", e);
+            logger.error("hmget error : ", e);
         } finally {
             returnResource(jedis);
         }
