@@ -30,7 +30,7 @@ public class RedisUtil {
     private static int MAX_IDLE = 100;
     private static int MIN_IDLE = 8;
     // 等待可用连接的最大时间，单位毫秒，默认值为-1，表示永不超时。如果超过等待时间，则直接抛出JedisConnectionException；
-    private static int MAX_WAIT = 100000;
+    private static int MAX_WAIT = 10000;
     // 0是关闭此设置
     private static int TIMEOUT = 300;
     // 在borrow一个jedis实例时，是否提前进行validate操作；如果为true，则得到的jedis实例均是可用的；
@@ -74,6 +74,8 @@ public class RedisUtil {
                 config.setMinIdle(MIN_IDLE);
                 config.setMaxWaitMillis(MAX_WAIT);
                 config.setTestOnBorrow(TEST_ON_BORROW);
+                //config.setMinEvictableIdleTimeMillis(30000L);
+                //config.setSoftMinEvictableIdleTimeMillis(-1L);
 
                 jedisPool = new JedisPool(config, HOST, PORT, TIMEOUT, PASSWORD);
                 logger.info("HOST:" + HOST + " MAX_ACTIVE:" + MAX_ACTIVE
@@ -90,7 +92,7 @@ public class RedisUtil {
      *
      * @return Jedis
      */
-    private synchronized static Jedis getJedis() {
+    public synchronized static Jedis getJedis() {
         Jedis jedis = null;
         try {
             if (jedisPool != null) {
